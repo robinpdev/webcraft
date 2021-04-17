@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="./style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r127/three.min.js" integrity="sha512-U4J4PbEJ2TMjFqPUSiKq7LLTHuEkPZVo0jl2fomi9pT7UAExh4xVi8KmoR7EfmyigH95aA68zpW7y3XzuoSurQ==" crossorigin="anonymous"></script>
+  <title>WebRTC Demo</title>
+</head>
+
+<body>
+  <h2>Le test</h2>
+  <button onclick="makeoffer()">make offer</button>
+  <p id="key">key comes here</p>
+  <input id="keyinput"/>
+  <button onclick="joincall()">join call</button>
+
+  <div class="slidecontainer">
+    <input type="range" min="-100" max="100" value="0" class="slider" id="rangex">
+    <input type="range" min="-100" max="100" value="0" class="slider" id="rangey">
+    <input type="range" min="-100" max="100" value="0" class="slider" id="rangez">
+  </div>
+
+  <!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
+
+  <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+
+  <!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->
+  <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-analytics.js"></script>
+
+  <!-- Add Firebase products that you want to use -->
+  <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-firestore.js"></script>
+  
+  <script src="./js/rtc.js"></script>
+  <script src="./js/main.js"></script>
+
+</body>
+
+</html>
