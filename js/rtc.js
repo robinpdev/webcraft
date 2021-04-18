@@ -38,7 +38,7 @@ function handleSendChannelStatusChange(event) {
         var state = sendChannel.readyState;
 
         if (state === "open") {
-            rtcsend("lesgooo");
+            document.getElementById("status").innerHTML = "verbonden";
         } else {
 
         }
