@@ -10,7 +10,7 @@
   <title>WebRTC Demo</title>
 </head>
 
-<body>
+<body onload="init();">
   <h2>Le test</h2>
   <button onclick="makeoffer()">make offer</button>
   <p id="key">key comes here</p>
@@ -18,11 +18,13 @@
   <button onclick="joincall()">join call</button>
   <p id="status">niet verbonden</p>
 
+  <!--
   <div class="slidecontainer">
     <input type="range" min="-100" max="100" value="0" class="slider" id="rangex">
     <input type="range" min="-100" max="100" value="0" class="slider" id="rangey">
     <input type="range" min="-100" max="100" value="0" class="slider" id="rangez">
   </div>
+  -->
 
   <!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
 

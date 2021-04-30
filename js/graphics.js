@@ -1,4 +1,4 @@
-let physicsobjects = [];
+let physobjs = [];
 let t = 0;
 let dt = 0;
 let lut = 0;
@@ -12,7 +12,13 @@ const camera = new THREE.PerspectiveCamera(
     1000
 );
 camera.rotation.order = 'ZYX';
-camera.position.z = 5;
+camera.position.z = 7;
+camera.vel = {
+    x: 0,
+    y: 0,
+    z: 0
+};
+physobjs.push(camera);
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -23,6 +29,7 @@ const material = new THREE.MeshBasicMaterial({
 });
 const cube = new THREE.Mesh(geometry, material);
 initobj(cube);
+physobjs.push(cube);
 
 
 function animate() {
@@ -31,17 +38,24 @@ function animate() {
     renderer.render(scene, camera);
 }
 
-function initobj(object){
-    object.velocity = {x: 0, y: 0, z: 0};
+function initobj(object) {
+    object.vel = {
+        x: 0,
+        y: 0,
+        z: 0
+    };
     scene.add(object);
 }
 
-function physicsupdate(object){
+function physicsupdate() {
     ut = new Date().getTime();
     t += ut - lut;
     dt = ut - lut;
     lut = ut;
-    object.position.x += object.velocity.x;
-    object.position.y += object.velocity.y;
-    object.position.z += object.velocity.z;
+    for (let i = 0; i < physobjs.length; i++) {
+        physobjs[i].position.x += physobjs[i].vel.x;
+        physobjs[i].position.y += physobjs[i].vel.y;
+        physobjs[i].position.z += physobjs[i].vel.z;
+    }
+
 }

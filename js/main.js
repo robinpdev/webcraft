@@ -17,10 +17,6 @@ const firestore = firebase.firestore();
 const keydisplay = document.getElementById('key');
 const keyinput = document.getElementById('keyinput');
 
-const rangex = document.getElementById('rangex');
-const rangey = document.getElementById('rangey');
-const rangez = document.getElementById('rangez');
-
 let campos = {
   x: 0,
   y: 0,
@@ -45,7 +41,7 @@ function handleReceiveMessage(event) {
 function rtcreceive(event) {
   try {
     let data = JSON.parse(event.data);
-    console.log(data);
+    console.log(data.rotation.x);
 
     if (data.position) {
       console.log("yeye");
@@ -53,12 +49,15 @@ function rtcreceive(event) {
       cube.position.y = data.position.y;
       cube.position.z = data.position.z;
     }
+    if(data.rotation){
+      cube.rotation.x = data.rotation.x;
+      cube.rotation.y = data.rotation.y;
+      cube.rotation.z = data.rotation.z;
+    }
   } catch (err) {
     console.log(event.data);
   }
 }
-
-
 
 // Hook pointer lock state change events for different browsers
 document.addEventListener('pointerlockchange', lockChangeAlert, false);
@@ -70,31 +69,6 @@ renderer.domElement.onclick = function () {
   renderer.domElement.requestPointerLock();
 };
 
-
-rangex.oninput = function () {
-  campos.x = rangex.value / 10;
-  camera.position.x = campos.x;
-  rtcsend({
-    position: campos
-  });
-}
-
-rangey.oninput = function () {
-  campos.y = rangey.value / 10;
-  camera.position.y = campos.y;
-  rtcsend({
-    position: campos
-  });
-}
-
-rangez.oninput = function () {
-  campos.z = rangez.value / 10;
-  camera.position.z = campos.z;
-  rtcsend({
-    position: campos
-  });
-}
-
 function onWindowResize() {
   console.log("resize");
   camera.aspect = window.innerWidth / window.innerHeight;
@@ -103,26 +77,95 @@ function onWindowResize() {
 }
 window.addEventListener('resize', onWindowResize, false);
 
+let camrotspd = 0.6;
 
-function mousemove(e){
-  camera.rotation.y += -e.movementX / 100.0;
-  camera.rotation.x += -e.movementY / 100.0;
+function mousemove(e) {
+  camera.rotation.y += -e.movementX / 100.0 * camrotspd;
+  camera.rotation.x += -e.movementY / 100.0 * camrotspd;
+  rtcbroadcast();
 }
 
 function lockChangeAlert() {
   if (document.pointerLockElement === renderer.domElement ||
-      document.mozPointerLockElement === renderer.domElement) {
+    document.mozPointerLockElement === renderer.domElement) {
     console.log('The pointer lock status is now locked');
     document.addEventListener("mousemove", mousemove, false);
     document.onkeydown
   } else {
-    console.log('The pointer lock status is now unlocked');  
+    console.log('The pointer lock status is now unlocked');
     document.removeEventListener("mousemove", mousemove, false);
   }
 }
 
-//set time for phycics updates
-ut = new Date().getTime();
-lut = ut;
-//start the drawing to the canvas
-animate();
+let camspd = 0.1;
+let change = false;
+document.addEventListener('keydown', function (event) {
+  change = true;
+  switch (event.key) {
+    case 'z': {
+      camera.vel.z = -camspd;
+      break;
+    }
+    case 's': {
+      camera.vel.z = camspd;
+      break;
+    }
+    case 'd': {
+      camera.vel.x = camspd;
+      break;
+    }
+    case 'q': {
+      camera.vel.x = -camspd;
+      break;
+    }
+  }
+  rtcbroadcast();
+});
+
+document.addEventListener('keyup', function (event) {
+  change = false;
+  switch (event.key) {
+    case 'z': {
+      camera.vel.z = 0;
+      break;
+    }
+    case 's': {
+      camera.vel.z = 0;
+      break;
+    }
+    case 'd': {
+      camera.vel.x = 0;
+      break;
+    }
+    case 'q': {
+      camera.vel.x = 0;
+      break;
+    }
+  }
+  rtcbroadcast();
+});
+
+function rtcbroadcast() {
+  sendrot = {x: camera.rotation.x, y: camera.rotation.y, z: camera.rotation.z};
+  console.log("broadcasting...");
+  rtcsend({
+    position: camera.position,
+    rotation: sendrot
+  });
+}
+
+let broadcastinterval = 400; //in ms
+function rtcbroadcastloop() {
+  rtcbroadcast();
+  //setTimeout(rtcbroadcastloop, broadcastinterval);
+}
+
+function init() {
+  //set time for phycics updates
+  ut = new Date().getTime();
+  lut = ut;
+  //start the drawing to the canvas
+  //rtcbroadcastloop();
+  animate();
+  
+}
