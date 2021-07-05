@@ -118,6 +118,14 @@ document.addEventListener('keydown', function (event) {
       camera.vel.x = -camspd;
       break;
     }
+    case 'r':{
+      camera.vel.y = camspd;
+      break;
+    }
+    case 'f':{
+      camera.vel.y = -camspd;
+      break;
+    }
   }
   rtcbroadcast();
 });
@@ -139,6 +147,14 @@ document.addEventListener('keyup', function (event) {
     }
     case 'q': {
       camera.vel.x = 0;
+      break;
+    }
+    case 'r':{
+      camera.vel.y = 0;
+      break;
+    }
+    case 'f':{
+      camera.vel.y = 0;
       break;
     }
   }
